@@ -134,7 +134,7 @@ export default function App() {
   );
 
   return (
-    <div className="flex h-screen bg-background font-sans text-foreground overflow-hidden">
+    <div className="flex h-screen bg-background font-sans text-foreground">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:block w-72 flex-shrink-0">
         <SidebarContent />
