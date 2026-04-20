@@ -85,7 +85,7 @@ const SOPImagePlaceholder = ({ label }: { label: string }) => (
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeSectionId, setActiveSectionId] = useState(sopData[0].id);
+  const [activeSectionId, setActiveSectionId] = useState("intro");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const filteredData = useMemo(() => {
@@ -120,7 +120,7 @@ export default function App() {
       
       <ScrollArea className="flex-1 px-4 py-6">
         <div className="space-y-1">
-          {sopData.map((section) => {
+          {filteredData.map((section) => {
             const Icon = iconMap[section.icon || "Info"];
             return (
               <button
@@ -140,6 +140,11 @@ export default function App() {
               </button>
             );
           })}
+          {filteredData.length === 0 && (
+            <div className="p-4 text-center">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">No sections found</p>
+            </div>
+          )}
         </div>
 
         <div className="mt-10">
@@ -318,153 +323,40 @@ export default function App() {
                   <h2 className="text-4xl font-extrabold tracking-tight text-foreground mb-4">
                     {activeSection.title}
                   </h2>
-                  <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl mb-8">
-                    {activeSection.content}
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-                  {activeSection.id === "introduction" ? (
-                    <>
-                      <motion.div 
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.1 }}
-                        className="md:col-span-2 md:row-span-2"
-                      >
-                        <Card className="h-full border-border shadow-sm bg-white overflow-hidden hover:shadow-md transition-shadow">
-                          <CardHeader className="pb-3">
-                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Team Overview</div>
-                            <CardTitle className="text-2xl">SCM Department</CardTitle>
-                            <CardDescription>Core team and primary responsibilities</CardDescription>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="space-y-4 mt-4">
-                              {[
-                                { name: "Mateo Ariza", role: "Teamlead", color: "bg-primary" },
-                                { name: "Julia Hönow", role: "Manager", color: "bg-slate-400" },
-                                { name: "Chenye Liu", role: "Manager", color: "bg-slate-400" },
-                                { name: "Saphira Pitka", role: "Sourcing", color: "bg-slate-400" }
-                              ].map((member) => (
-                                <div key={member.name} className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 hover:bg-slate-100 transition-colors">
-                                  <div className="flex items-center gap-3">
-                                    <div className={`w-8 h-8 rounded-full ${member.color} flex items-center justify-center text-white text-[10px] font-bold`}>
-                                      {member.name.split(' ').map(n => n[0]).join('')}
-                                    </div>
-                                    <span className="text-sm font-bold text-foreground">{member.name}</span>
-                                  </div>
-                                  <Badge variant="secondary" className="text-[10px] font-bold uppercase tracking-wider">{member.role}</Badge>
-                                </div>
-                              ))}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-
-                      <motion.div 
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.2 }}
-                        className="md:col-span-1"
-                      >
-                        <Card className="h-full border-border shadow-sm bg-white hover:shadow-md transition-shadow">
-                          <CardHeader className="pb-2">
-                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Status</div>
-                            <CardTitle className="text-lg">System Health</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="flex items-center gap-2 mt-2">
-                              <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
-                              <span className="text-sm font-bold">ERP Live Sync</span>
-                            </div>
-                            <p className="text-[10px] text-muted-foreground mt-2 uppercase tracking-wider">Last sync: 4m ago</p>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-
-                      <motion.div 
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.3 }}
-                        className="md:col-span-1 md:row-span-2"
-                      >
-                        <Card className="h-full border-none shadow-lg bg-primary text-white hover:shadow-xl transition-shadow">
-                          <CardHeader className="pb-3">
-                            <div className="text-[10px] font-bold text-white/60 uppercase tracking-widest mb-2">Emergency</div>
-                            <CardTitle className="text-xl text-white">Incident Protocol</CardTitle>
-                          </CardHeader>
-                          <CardContent className="flex flex-col h-full">
-                            <p className="text-sm text-white/80 leading-relaxed">
-                              Immediate steps for shipment delays or inventory discrepancies.
-                            </p>
-                            <Button variant="secondary" className="mt-8 w-full bg-white text-primary hover:bg-white/90 font-bold uppercase tracking-wider text-xs">
-                              Access Manual
-                            </Button>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-
-                      <motion.div 
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.4 }}
-                        className="md:col-span-1"
-                      >
-                        <Card className="h-full border-border shadow-sm bg-white hover:shadow-md transition-shadow">
-                          <CardHeader className="pb-2">
-                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Accuracy</div>
-                            <CardTitle className="text-lg">99.8%</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <p className="text-xs text-muted-foreground font-medium">Inventory Precision</p>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-                    </>
-                  ) : (
-                    <div className="md:col-span-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                      >
-                        <Card className="h-full border-border shadow-sm bg-white hover:shadow-md transition-shadow">
-                          <CardHeader className="pb-3">
-                            <Users className="w-5 h-5 text-primary mb-2" />
-                            <CardTitle className="text-lg">Section Overview</CardTitle>
-                            <CardDescription>Key information for this module</CardDescription>
-                          </CardHeader>
-                          <CardContent>
-                            <p className="text-sm text-muted-foreground leading-relaxed">
-                              {activeSection.content}
-                            </p>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                      >
-                        <Card className="h-full border-border shadow-sm bg-white hover:shadow-md transition-shadow">
-                          <CardHeader className="pb-3">
-                            <Calendar className="w-5 h-5 text-primary mb-2" />
-                            <CardTitle className="text-lg">Quick Actions</CardTitle>
-                            <CardDescription>Relevant tools and links</CardDescription>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="flex flex-wrap gap-2">
-                              <Badge variant="secondary" className="cursor-pointer hover:bg-slate-200 transition-colors">Open Xentral</Badge>
-                              <Badge variant="secondary" className="cursor-pointer hover:bg-slate-200 transition-colors">View Reports</Badge>
-                              <Badge variant="secondary" className="cursor-pointer hover:bg-slate-200 transition-colors">Contact Team</Badge>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-                    </div>
-                  )}
                 </div>
 
                 <div className="space-y-6">
+                  <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em] mb-6">Resource Hub</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                    {activeSection.links?.map((link) => (
+                      <motion.a
+                        key={link.label}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ y: -4 }}
+                        className="group flex flex-col p-6 bg-white border border-border rounded-[2rem] shadow-sm hover:shadow-md transition-all"
+                      >
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="w-10 h-10 rounded-2xl bg-secondary flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                            <LinkIcon type={link.type} />
+                          </div>
+                          <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </div>
+                        <h4 className="font-bold text-foreground mb-1">{link.label}</h4>
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Access {link.type || 'Resource'}</p>
+                      </motion.a>
+                    ))}
+                    {!activeSection.links?.length && (
+                      <div className="md:col-span-3 py-12 flex flex-col items-center justify-center border-2 border-dashed border-slate-100 rounded-[2rem] opacity-50">
+                        <FileText className="w-12 h-12 text-slate-200 mb-4" />
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center">
+                          No direct links associated<br />with this section
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
                   <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em] mb-6">Detailed Procedures</h3>
                   <div className="grid grid-cols-1 gap-4">
                     {activeSection.subsections?.map((sub, index) => (
