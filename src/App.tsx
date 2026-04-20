@@ -19,10 +19,16 @@ import {
   Users,
   Calendar,
   MapPin,
-  Clock
+  Clock,
+  Video,
+  FileText,
+  MousePointer2,
+  Image as ImageIcon
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { sopData, SOPSection } from "./data/sopData";
+import { sopData, SOPSection, SOPLink } from "./data/sopData";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -40,6 +46,42 @@ const iconMap: Record<string, any> = {
   ShieldCheck,
   Briefcase,
 };
+
+const LinkIcon = ({ type }: { type?: string }) => {
+  switch (type) {
+    case 'tool': return <MousePointer2 className="w-3.5 h-3.5" />;
+    case 'video': return <Video className="w-3.5 h-3.5" />;
+    case 'doc': return <FileText className="w-3.5 h-3.5" />;
+    default: return <ExternalLink className="w-3.5 h-3.5" />;
+  }
+};
+
+const SOPImagePlaceholder = ({ label }: { label: string }) => (
+  <div className="ml-14 mb-8 rounded-[2rem] bg-slate-50 border-2 border-dashed border-slate-200 overflow-hidden group/img">
+    <div className="p-12 flex flex-col items-center justify-center text-center">
+      <div className="w-16 h-16 rounded-3xl bg-white shadow-xl border border-slate-100 flex items-center justify-center mb-6 group-hover/img:scale-110 transition-transform duration-500">
+        <ImageIcon className="w-8 h-8 text-slate-300" />
+      </div>
+      <h4 className="text-sm font-bold text-slate-800 mb-2">Original SOP Illustration</h4>
+      <p className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-black max-w-[280px] mb-6">
+        Reference: {label}
+      </p>
+      <div className="flex gap-2">
+        <Badge variant="outline" className="bg-white border-slate-200 text-slate-500 text-[9px] font-bold uppercase py-0.5 px-3">
+          Verbatim Link Required
+        </Badge>
+      </div>
+    </div>
+    <div className="bg-slate-100/50 py-3 px-6 border-t border-slate-200 flex items-center justify-between">
+      <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest leading-none">System Reference Only</span>
+      <div className="flex gap-1">
+        <div className="w-1 h-1 rounded-full bg-slate-200" />
+        <div className="w-1 h-1 rounded-full bg-slate-200" />
+        <div className="w-1 h-1 rounded-full bg-slate-200" />
+      </div>
+    </div>
+  </div>
+);
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -134,23 +176,25 @@ export default function App() {
   );
 
   return (
-    <div className="flex min-h-screen bg-background font-sans text-foreground">
+    <div className="flex h-screen bg-background font-sans text-foreground overflow-hidden">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:block w-72 flex-shrink-0">
         <SidebarContent />
       </aside>
 
       {/* Main Content */}
-    <main className="flex-1 flex flex-col min-w-0 bg-background overflow-y-auto">
+      <main className="flex-1 flex flex-col min-w-0 bg-background">
         {/* Header */}
         <header className="h-20 border-b border-border flex items-center justify-between px-8 bg-white sticky top-0 z-10">
           <div className="flex items-center gap-6 flex-1">
             <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="lg:hidden">
-                  <Menu className="w-5 h-5" />
-                </Button>
-              </SheetTrigger>
+              <SheetTrigger 
+                render={
+                  <Button variant="ghost" size="icon" className="lg:hidden">
+                    <Menu className="w-5 h-5" />
+                  </Button>
+                }
+              />
               <SheetContent side="left" className="p-0 w-72">
                 <SidebarContent />
               </SheetContent>
@@ -274,7 +318,7 @@ export default function App() {
                   <h2 className="text-4xl font-extrabold tracking-tight text-foreground mb-4">
                     {activeSection.title}
                   </h2>
-                  <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
+                  <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl mb-8">
                     {activeSection.content}
                   </p>
                 </div>
@@ -424,7 +468,7 @@ export default function App() {
                   <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em] mb-6">Detailed Procedures</h3>
                   <div className="grid grid-cols-1 gap-4">
                     {activeSection.subsections?.map((sub, index) => (
-                      <Accordion type="single" collapsible key={sub.id} className="w-full">
+                      <Accordion key={sub.id} className="w-full">
                         <AccordionItem 
                           value={sub.id}
                           className="border border-border rounded-2xl px-6 bg-white shadow-sm overflow-hidden"
@@ -438,24 +482,47 @@ export default function App() {
                             </div>
                           </AccordionTrigger>
                           <AccordionContent className="pb-8 pt-2">
-                            <div className="pl-14 pr-4 text-muted-foreground leading-relaxed whitespace-pre-line text-sm">
-                              {sub.content}
+                            {sub.imageLabel && (
+                              <SOPImagePlaceholder label={sub.imageLabel} />
+                            )}
+                            <div className="pl-14 pr-4 text-muted-foreground leading-relaxed text-sm prose prose-sm prose-slate max-w-none">
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {sub.content}
+                              </ReactMarkdown>
                             </div>
                             
-                            {/* Media Placeholders for SOP content pointers */}
-                            {(sub.content.toLowerCase().includes("video") || sub.content.toLowerCase().includes("loom") || sub.content.toLowerCase().includes("example")) && (
-                              <div className="mt-6 ml-14">
-                                <Card className="bg-slate-50 border-dashed border-2 border-slate-200">
-                                  <CardContent className="flex flex-col items-center justify-center py-10 text-center">
-                                    <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center text-primary mb-4">
-                                      <Database className="w-6 h-6" />
+                            {/* In-context links for subsections */}
+                            {sub.links && sub.links.length > 0 && (
+                              <div className="mt-8 ml-14 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {sub.links.map((link) => (
+                                  <a 
+                                    key={link.label}
+                                    href={link.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-100 rounded-xl hover:border-primary/50 transition-all group"
+                                  >
+                                    <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                                      <LinkIcon type={link.type} />
                                     </div>
-                                    <p className="text-sm font-bold text-foreground mb-1">Media Resource</p>
-                                    <p className="text-xs text-muted-foreground max-w-[200px]">This procedure references an external video or image guide in the original document.</p>
-                                    <Button variant="outline" size="sm" className="mt-4 text-[10px] font-bold uppercase tracking-wider">
-                                      <ExternalLink className="w-3 h-3 mr-2" />
-                                      Open Source
-                                    </Button>
+                                    <span className="text-xs font-bold text-slate-700">{link.label}</span>
+                                  </a>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Media Placeholders for SOP content pointers */}
+                            {(sub.content.toLowerCase().includes("video") || sub.content.toLowerCase().includes("loom") || sub.content.toLowerCase().includes("example") || sub.content.toLowerCase().includes("mp4")) && (
+                              <div className="mt-8 ml-14">
+                                <Card className="bg-slate-50 border-dashed border-2 border-slate-200">
+                                  <CardContent className="flex flex-col items-center justify-center py-8 text-center">
+                                    <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-primary mb-4 border border-slate-100">
+                                      <Video className="w-6 h-6" />
+                                    </div>
+                                    <p className="text-sm font-bold text-foreground mb-1 text-slate-800">Visual Resource Reference</p>
+                                    <p className="text-[10px] text-slate-400 uppercase tracking-wider leading-relaxed max-w-[240px]">
+                                      The original SOP references a Loom video or visual walkthrough at this step.
+                                    </p>
                                   </CardContent>
                                 </Card>
                               </div>
@@ -498,20 +565,32 @@ export default function App() {
                 </div>
 
                 {activeSection.links && activeSection.links.length > 0 && (
-                  <div className="mt-12 p-8 bg-secondary/30 rounded-3xl border border-primary/10">
-                    <h3 className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
-                      <ExternalLink className="w-4 h-4" />
-                      Section Resources & Links
+                  <div className="mt-16 p-10 bg-slate-900 rounded-[2.5rem] text-white overflow-hidden relative group">
+                    <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                      <ExternalLink className="w-32 h-32 text-white" />
+                    </div>
+                    
+                    <h3 className="text-xs font-black text-primary uppercase tracking-[0.3em] mb-10 flex items-center gap-3">
+                      <Badge variant="secondary" className="bg-primary text-white border-none py-0 px-2 h-5">Hub</Badge>
+                      Section Resources & Tools
                     </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
                       {activeSection.links.map((link) => (
                         <a 
                           key={link.label} 
                           href={link.url}
-                          className="flex items-center justify-between p-4 bg-white rounded-xl border border-border hover:border-primary/30 hover:shadow-sm transition-all group"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between p-5 bg-white/5 border border-white/10 rounded-2xl hover:bg-white aggregation-hover:border-primary/50 transition-all group/link"
                         >
-                          <span className="text-xs font-bold text-foreground">{link.label}</span>
-                          <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors" />
+                          <div className="flex items-center gap-4">
+                            <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-white group-hover/link:bg-primary transition-colors">
+                              <LinkIcon type={link.type} />
+                            </div>
+                            <span className="text-xs font-bold text-white/90 group-hover/link:text-white">{link.label}</span>
+                          </div>
+                          <ChevronRight className="w-4 h-4 text-white/20 group-hover/link:text-primary transition-all group-hover/link:translate-x-1" />
                         </a>
                       ))}
                     </div>
