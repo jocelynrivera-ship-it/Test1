@@ -134,7 +134,7 @@ export default function App() {
   );
 
   return (
-    <div className="flex h-screen bg-background font-sans text-foreground">
+    <div className="flex h-screen bg-background font-sans text-foreground overflow-hidden">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:block w-72 flex-shrink-0">
         <SidebarContent />
@@ -441,39 +441,52 @@ export default function App() {
                             <div className="pl-14 pr-4 text-muted-foreground leading-relaxed whitespace-pre-line text-sm">
                               {sub.content}
                             </div>
-                            {sub.id === "gii-process" && (
-                              <div className="mt-8 ml-14 p-8 bg-slate-50 border border-border rounded-2xl">
-                                <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-6">Gii Workflow</h4>
-                                <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative">
-                                  <div className="absolute top-5 left-10 right-10 h-0.5 bg-border hidden md:block" />
-                                  {[
-                                    { step: "01", label: "Production" },
-                                    { step: "02", label: "Samples" },
-                                    { step: "03", label: "Inspection" },
-                                    { step: "✓", label: "Release", success: true }
-                                  ].map((item) => (
-                                    <div key={item.label} className="flex flex-col items-center gap-3 relative z-10">
-                                      <div className={`w-10 h-10 rounded-full ${item.success ? 'bg-green-500' : 'bg-secondary'} flex items-center justify-center text-xs font-bold ${item.success ? 'text-white' : 'text-primary'}`}>
-                                        {item.step}
-                                      </div>
-                                      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{item.label}</span>
+                            
+                            {/* Media Placeholders for SOP content pointers */}
+                            {(sub.content.toLowerCase().includes("video") || sub.content.toLowerCase().includes("loom") || sub.content.toLowerCase().includes("example")) && (
+                              <div className="mt-6 ml-14">
+                                <Card className="bg-slate-50 border-dashed border-2 border-slate-200">
+                                  <CardContent className="flex flex-col items-center justify-center py-10 text-center">
+                                    <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center text-primary mb-4">
+                                      <Database className="w-6 h-6" />
                                     </div>
-                                  ))}
-                                </div>
+                                    <p className="text-sm font-bold text-foreground mb-1">Media Resource</p>
+                                    <p className="text-xs text-muted-foreground max-w-[200px]">This procedure references an external video or image guide in the original document.</p>
+                                    <Button variant="outline" size="sm" className="mt-4 text-[10px] font-bold uppercase tracking-wider">
+                                      <ExternalLink className="w-3 h-3 mr-2" />
+                                      Open Source
+                                    </Button>
+                                  </CardContent>
+                                </Card>
                               </div>
                             )}
-                            {sub.id === "zen-fulfillment" && (
-                              <div className="mt-8 ml-14 p-6 bg-slate-50 border border-border rounded-2xl flex items-start gap-4">
-                                <div className="w-10 h-10 rounded-full bg-white border border-border flex items-center justify-center text-primary">
-                                  <MapPin className="w-5 h-5" />
+
+                            {activeSection.id === "introduction" && sub.id === "important-addresses" && (
+                              <div className="mt-8 ml-14 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="p-6 bg-slate-50 border border-border rounded-2xl flex items-start gap-4">
+                                  <div className="w-10 h-10 rounded-full bg-white border border-border flex items-center justify-center text-primary">
+                                    <MapPin className="w-5 h-5" />
+                                  </div>
+                                  <div>
+                                    <p className="text-xs font-bold text-foreground uppercase tracking-wider mb-1">Zenfulfillment Apfelstädt</p>
+                                    <p className="text-[11px] text-muted-foreground leading-relaxed">
+                                      c/o Fiege, Tor 19/20/21<br />
+                                      Sülzenbrücker Str. 7<br />
+                                      99192 Apfelstädt
+                                    </p>
+                                  </div>
                                 </div>
-                                <div>
-                                  <p className="text-xs font-bold text-foreground uppercase tracking-wider mb-1">Main Delivery Address</p>
-                                  <p className="text-sm text-muted-foreground leading-relaxed">
-                                    Zenfulfillment GmbH c/o Fiege<br />
-                                    Tor 19/20/21, Sülzenbrücker Str. 7<br />
-                                    99192 Apfelstädt, Germany
-                                  </p>
+                                <div className="p-6 bg-slate-50 border border-border rounded-2xl flex items-start gap-4">
+                                  <div className="w-10 h-10 rounded-full bg-white border border-border flex items-center justify-center text-primary">
+                                    <Briefcase className="w-5 h-5" />
+                                  </div>
+                                  <div>
+                                    <p className="text-xs font-bold text-foreground uppercase tracking-wider mb-1">Berlin Office</p>
+                                    <p className="text-[11px] text-muted-foreground leading-relaxed">
+                                      Revaler Straße 30 - 31<br />
+                                      10245 Berlin, Germany
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
                             )}
@@ -483,6 +496,27 @@ export default function App() {
                     ))}
                   </div>
                 </div>
+
+                {activeSection.links && activeSection.links.length > 0 && (
+                  <div className="mt-12 p-8 bg-secondary/30 rounded-3xl border border-primary/10">
+                    <h3 className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                      <ExternalLink className="w-4 h-4" />
+                      Section Resources & Links
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                      {activeSection.links.map((link) => (
+                        <a 
+                          key={link.label} 
+                          href={link.url}
+                          className="flex items-center justify-between p-4 bg-white rounded-xl border border-border hover:border-primary/30 hover:shadow-sm transition-all group"
+                        >
+                          <span className="text-xs font-bold text-foreground">{link.label}</span>
+                          <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors" />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {activeSection.id === "xentral-erp" && (
                   <Card className="mt-12 border-none shadow-xl bg-slate-900 text-white overflow-hidden rounded-3xl">
