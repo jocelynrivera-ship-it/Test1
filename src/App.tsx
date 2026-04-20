@@ -134,14 +134,14 @@ export default function App() {
   );
 
   return (
-    <div className="flex h-screen bg-background font-sans text-foreground overflow-hidden">
+    <div className="flex min-h-screen bg-background font-sans text-foreground">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:block w-72 flex-shrink-0">
         <SidebarContent />
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 bg-background">
+    <main className="flex-1 flex flex-col min-w-0 bg-background overflow-y-auto">
         {/* Header */}
         <header className="h-20 border-b border-border flex items-center justify-between px-8 bg-white sticky top-0 z-10">
           <div className="flex items-center gap-6 flex-1">
