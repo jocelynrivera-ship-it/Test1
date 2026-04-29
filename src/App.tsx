@@ -580,24 +580,24 @@ export default function App() {
                   transition={{ duration: 0.2 }}
                   className="space-y-16"
                 >
-                  <div className="relative overflow-hidden p-8 md:p-10 rounded-[2.5rem] bg-primary text-primary-foreground shadow-2xl">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-[80px] -mr-20 -mt-20 shrink-0 select-none pointer-events-none" />
-                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/20 rounded-full blur-[60px] -ml-10 -mb-10 shrink-0 select-none pointer-events-none" />
+                  <div className="relative overflow-hidden p-6 md:p-8 rounded-[2rem] bg-primary text-primary-foreground shadow-2xl">
+                    <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-[60px] -mr-10 -mt-10 shrink-0 select-none pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 w-32 h-32 bg-black/20 rounded-full blur-[40px] -ml-5 -mb-5 shrink-0 select-none pointer-events-none" />
                     
                     <div className="relative z-10">
-                      <div className="flex items-center gap-3 mb-6">
-                        <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-8 h-8 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner">
                           {(() => {
                             const Icon = iconMap[activeSection?.icon] || Info;
-                            return <Icon className="w-5 h-5" />;
+                            return <Icon className="w-4 h-4" />;
                           })()}
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-[9px] font-black uppercase tracking-[0.2em] opacity-70 leading-none">Supply Chain Documentation</span>
-                          <span className="text-xs font-bold opacity-90">SOP // BRAINEFFECT</span>
+                          <span className="text-[8px] font-black uppercase tracking-[0.2em] opacity-70 leading-none">Supply Chain Documentation</span>
+                          <span className="text-[10px] font-bold opacity-90 leading-none mt-0.5">SOP // BRAINEFFECT</span>
                         </div>
                       </div>
-                      <h2 className="text-3xl md:text-5xl font-black tracking-tightest leading-[0.95] mb-4 max-w-3xl">
+                      <h2 className="text-2xl md:text-4xl font-black tracking-tightest leading-[0.95] mb-4 max-w-3xl">
                         {activeSection?.title}
                       </h2>
                       <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10 mt-2">
@@ -613,7 +613,7 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-[2.5rem] p-6 md:p-10 border border-slate-100 shadow-sm relative z-20 -mt-6 mx-2 md:mx-4">
+                  <div className="bg-white rounded-[2rem] p-6 md:p-8 border border-slate-100 shadow-sm relative z-20 -mt-10 mx-2 md:mx-4">
                     {activeSection.subsections && activeSection.subsections.length > 0 && (
                       <QuickNav 
                         items={activeSection.subsections.map(s => ({ id: s.id, title: s.title }))} 
@@ -621,7 +621,7 @@ export default function App() {
                       />
                     )}
 
-                    <div className="prose prose-slate prose-lg max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-p:leading-relaxed prose-img:rounded-[2rem] prose-img:shadow-lg prose-a:text-primary prose-a:font-black prose-a:no-underline hover:prose-a:underline">
+                    <div className="prose prose-slate prose-base max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-p:leading-relaxed prose-img:rounded-[2rem] prose-img:shadow-lg prose-a:text-primary prose-a:font-black prose-a:no-underline hover:prose-a:underline">
                       <CustomMarkdown content={activeSection?.content} />
                     </div>
                   </div>
