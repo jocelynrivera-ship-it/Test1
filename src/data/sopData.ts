@@ -14,7 +14,7 @@ export interface SOPSection {
 
 export const sopData: SOPSection[] = [
   {
-    id: "intro",
+    id: "introduction",
     title: "Introduction",
     icon: "Info",
     content: "# Supply Chain Management SOP\n**BRAINEFFECT SCM Team**\n\nLast update: Jan 2026\n\n________________\n\n### Introduction to the SCM processes\n________________\n\n**SCM Team**\n* **Mateo Ariza** - Teamlead Supply Chain Management - mateo.ariza@brain-effect.com\n* **Julia Hönow** - Supply Chain Manager - julia.hoenow@brain-effect.com\n* **Chenye Liu** - Supply Chain Manager - chenye.liu@brain-effect.com\n* **Saphira Pitka** - Sourcing Manager - saphira.pitka@brain-effect.com\n\n### Main responsibilities of SCM team\n* Inventory Management System - Mateo\n* PO Overview - Karolina & Julia & Chenye & Saphira\n* Xentral & Byrd/Alaiko SKU creation and maintenance - Karolina (Main) & Julia (Backup)\n* Out-of-Stock report - Mateo\n* MHD report - Karolina\n* SCM Transparency - Karolina & Mateo\n* Amazon/Influencer team support/ Adhoc requests - Karolina & Chen\n* Sourcing - Saphira\n\n### SCM Meetings\n[Asana - General SCM Knowledge](https://asana.com/)\n\n* **Daily: 10:00** - SCM - Daily Standup\n* **Monday: 14:30** - SCM JF & Week Kick-off\n* **Tuesday: 10:30** - NEW weekly Jour fixe BHI / BRAINEFFECT\n* **Tuesday: 15:30** - JF B2B - SCM\n* **Thursday: 13:00** - Inventory Planning in IMS\n* **Thursday: 17:00** - JF: BI - SCM\n* **Friday: 15:00** - SCM Week Check-out",
@@ -22,7 +22,7 @@ export const sopData: SOPSection[] = [
       {
         id: "addresses",
         title: "Important Addresses",
-        content: "[Asana - General SCM Knowledge](https://asana.com/)\n\n**New delivery address as CW28-2025**\nZenfulfillment GmbH\nc/o Fiege\nTor 19/20/21\nSülzenbrücker Str. 7\nD-99192 Apfelstädt\n\n* Die Warenannahme erfolgt arbeitstäglich von Montag bis Freitag 6:00 – 14:00 Uhr\n* Paletten/Ladungsträger dürfen eine Gesamthöhe von max. 1800 mm (inkl. Palette)\n* Das Gesamtgewicht je Palette darf max. 850 kg betragen\n* For the Master Cartons: Eine Maximalgröße von 600x400x400mm sollte nicht überschritten werden\n* Booking delivery slot: [https://webslot-fly.fiege.com/Login.aspx?ReturnUrl=%2f](https://webslot-fly.fiege.com/Login.aspx?ReturnUrl=%2f)\n\n**Shipment to BRANDPACKAGING:**\nAPACK Sp. Z.o.o.\nc/o Brandpackaging GmbH\nPatrycja Barełkowska\nKowanowo 22\n64-600 Oborniki, Poland\n\n**Delivery address for Gii samples / Office address as of Jan. 2023:**\nWhitewall GmbH\nRevaler Straße 30 - 31\n10245 Berlin\nDeutschland\n\n**Fahrner / Previous 3PL**\nAnlieferadresse:\nFahrner Logistics Services GmbH\nc/o Whitewall GmbH\nSeedorfer Str. 80\n78713 Waldmössingen\n \n* Warenannahmezeiten: Mo – Do 8:00 – 16:00 Uhr Fr. 8:00 – 14:00 Uhr\n* Palettenhöhe und max. Überstand: Im besten Fall bitte die Europaletten nicht überbauen. Max. 1.60 m hoch"
+        content: "[Asana - General SCM Knowledge](https://asana.com/)\n\n**New delivery address as CW28-2025**\nZenfulfillment GmbH\nc/o Fiege\nTor 19/20/21\nSülzenbrücker Str. 7\nD-99192 Apfelstädt\n\n* Die Warenannahme erfolgt arbeitstäglich von Montag bis Freitag 6:00 – 14:00 Uhr\n* Paletten/Ladungsträger dürfen eine Gesamthöhe von max. 1800 mm (inkl. Palette)\n* Das Gesamtgewicht je Palette darf max. 850 kg betragen\n* For the Master Cartons: Eine Maximalgröße von 600x400x400mm sollte nicht überschritten werden\n* Booking delivery slot: [https://webslot-fly.fiege.com/Login.aspx?ReturnUrl=%2f](https://webslot-fly.fiege.com/Login.aspx?ReturnUrl=%2f)\n\n**Shipment to BRANDPACKAGING:**\nAPACK Sp. Z.o.o.\nc/o Brandpackaging GmbH\nPatrycja Barełkowska\nKowanowo 22\n64-600 Oborniki, Poland\n\n**Delivery address for Gii samples / Office address as of Jan. 2023:**\nWhitewall GmbH\nProduct Team / Gii\nRevaler Straße 30 - 31\n10245 Berlin\nDeutschland\n\n**Fahrner / Previous 3PL**\nAnlieferadresse:\nFahrner Logistics Services GmbH\nc/o Whitewall GmbH\nSeedorfer Str. 80\n78713 Waldmössingen\n \n* Warenannahmezeiten: Mo – Do 8:00 – 16:00 Uhr Fr. 8:00 – 14:00 Uhr\n* Palettenhöhe und max. Überstand: Im besten Fall bitte die Europaletten nicht überbauen. Max. 1.60 m hoch"
       },
       {
         id: "backup",
@@ -66,45 +66,6 @@ export const sopData: SOPSection[] = [
         id: "block-sku",
         title: "How to Block an SKU in Xentral",
         content: "1. **Look up SKU**: Search for the specific SKU in Xentral.\n2. **Navigate to Sperre Section**: Scroll to the bottom of the article details page until you find the section titled Sperre (Lock/Block).\n3. **Activate the Block**: Tick the checkbox labeled Sperre aktiv:. This prevents the article from being added to new orders.\n4. **Document the Reason**: In the Meldung (Message) box, enter the date and the specific reason for the block.\n    * Example: 30.03.2024 - End of product life cycle\n\n![Screenshot: Sperre Lock/Block Configuration Section](xentral_sperre.png)\n\n5. **Save Changes**: Scroll back to the top (or bottom) of the page and click the Speichern (Save) button to finalize the block."
-      }
-    ]
-  },
-  {
-    id: "gs1",
-    title: "GS1 Labels",
-    icon: "ShieldCheck",
-    content: "### GS1 Label Creation and Management\nGS1 labels are essential for product identification and logistics tracking.\n\n* [GS1 - Login](#)\n* [Request for GLN change](#)",
-    subsections: [
-      {
-        id: "gs1-login",
-        title: "How to log in to GS1",
-        content: "1. Go to the GS1 login page.\n2. Enter the credentials provided by the SCM Team Lead.\n3. Complete the two-factor authentication if required."
-      }
-    ]
-  },
-  {
-    id: "ims",
-    title: "IMS - Inventory Management System",
-    icon: "BarChart3",
-    content: "### Inventory Management System (IMS)\nIMS is the core tool for tracking stock levels and planning orders.\n\n* [IMS V4_CW47](#)\n* [Inventory Planning guideline](#)",
-    subsections: [
-      {
-        id: "ims-overview",
-        title: "IMS Overview",
-        content: "The IMS provides a real-time view of inventory across all warehouses. It is used to:\n* Track current stock levels\n* Forecast future demand\n* Plan replenishment orders"
-      }
-    ]
-  },
-  {
-    id: "po-overview",
-    title: "PO Overview Spreadsheet",
-    icon: "Truck",
-    content: "### Purchase Order (PO) Overview\nThe PO Overview spreadsheet is used to track the status of all procurement activities.\n\n* [PO Overview Spreadsheet](#)",
-    subsections: [
-      {
-        id: "po-tracking",
-        title: "Tracking POs",
-        content: "All new purchase orders must be recorded in the PO Overview spreadsheet immediately after creation in Xentral.\n* **Update Status**: Regularly update the status of each PO (e.g., Prepared, Sent, Confirmed, Shipped, Received)."
       }
     ]
   }

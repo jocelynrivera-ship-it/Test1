@@ -232,30 +232,51 @@ const CustomMarkdown = ({ content }: { content: string }) => {
               // But if it's simple text, we handle it here
             }
 
-            // Detect Team Member pattern
-            if (text.includes(" - ") && text.includes("@brain-effect.com")) {
-              const parts = text.split(" - ");
-              const name = parts[0].replace(/[* ]/g, "");
-              const info = parts[1].split(" - ");
-              const role = info[0];
-              const email = info[info.length - 1];
-              return <TeamMemberCard name={name} role={role} email={email} />;
+            // Detect Team Member pattern: "* **Name** - Role - email" or similar
+            if (text.includes("@brain-effect.com")) {
+              const nameMatch = text.match(/\*\*([^*]+)\*\*/);
+              const name = nameMatch ? nameMatch[1] : text.split(" - ")[0].replace(/[*]/g, "").trim();
+              const remaining = text.replace(`**${name}**`, "").replace(/^\*?\s*/, "").trim();
+              const parts = remaining.split(" - ");
+              
+              let role = "SCM Member";
+              let email = "";
+
+              if (parts.length >= 2) {
+                role = parts[0].replace(/^-?\s*/, "").trim();
+                email = parts[parts.length - 1].trim();
+              } else if (parts.length === 1) {
+                if (parts[0].includes("@")) email = parts[0];
+                else role = parts[0];
+              }
+
+              if (email) return <TeamMemberCard name={name} role={role} email={email} />;
             }
             
-            // Detect Meeting pattern
-            const meetingMatch = text.match(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Daily):\s*(\d{2}:\d{2})\s*-\s*(.*)/);
+            // Detect Meeting pattern: "* **Day: Time** - Title"
+            const meetingMatch = text.match(/^\*?\s*\*\*(Monday|Tuesday|Wednesday|Thursday|Friday|Daily):\s*(\d{2}:\d{2})\*\*\s*-\s*(.*)/);
             if (meetingMatch) {
               return <MeetingCard day={meetingMatch[1]} time={meetingMatch[2]} title={meetingMatch[3]} />;
             }
           } else {
             // Complex content: check first child if it's a bold tag for Status Definitions
             const firstChild = childrenArray[0];
-            const remains = childrenArray.slice(1);
-            const remainsText = remains.map(c => typeof c === 'string' ? c : '').join('');
+            const secondChild = childrenArray[1];
+            const remainsText = childrenArray.slice(1).map(c => typeof c === 'string' ? c : '').join('');
+
+            // Pattern: ["1. ", <strong>Name</strong>, " Refers to..."]
+            if (typeof firstChild === 'string' && firstChild.match(/^\d+\.\s+$/) && secondChild && typeof secondChild === 'object' && 'type' in secondChild && secondChild.type === 'strong') {
+              const description = childrenArray.slice(2).map(c => typeof c === 'string' ? c : '').join('').trim();
+              if (description.match(/^(Refers to|Indicates|A status)/)) {
+                // @ts-ignore
+                const name = secondChild.props.children;
+                return <StatusBadge name={String(name)} description={description} />;
+              }
+            }
 
             // Pattern: [<strong>Name</strong>, " Refers to..."]
             if (firstChild && typeof firstChild === 'object' && 'type' in firstChild && firstChild.type === 'strong') {
-              if (remainsText.match(/^\s+(Refers to|Indicates|A status|Indicates|Refers)/)) {
+              if (remainsText.match(/^\s+(Refers to|Indicates|A status)/)) {
                 // @ts-ignore
                 const name = firstChild.props.children;
                 return <StatusBadge name={String(name)} description={remainsText.trim()} />;
